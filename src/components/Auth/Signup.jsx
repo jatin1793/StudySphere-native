@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-import baseUrl from '../../utils/axios';
+import baseUrl, { Signup } from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Studentsignin = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [inputs, setInputs] = useState({
@@ -31,7 +31,7 @@ const Studentsignin = () => {
   const [btnloading, setbtnloading] = useState(false)
 
   async function registerStudent() {
-    const {phone, email, name, password, institution, qualification, course} =inputs;
+    const { phone, email, name, password, institution, qualification, course } = inputs;
     setbtnloading(true)
 
     if (
@@ -43,7 +43,7 @@ const Studentsignin = () => {
       !qualification ||
       !course
     ) {
-      Toast.show({type: 'error', text1: 'Fill in all required fields!'});
+      Toast.show({ type: 'error', text1: 'Fill in all required fields!' });
     } else if (phone.length !== 10) {
       Toast.show({
         type: 'error',
@@ -66,18 +66,7 @@ const Studentsignin = () => {
       });
     } else {
       try {
-        const response = await baseUrl.post(
-          '/student/register',
-          {
-            phone,
-            email,
-            name,
-            password,
-            institution,
-            qualification,
-            course,
-          },
-        );
+        const response = await Signup({ phone, email, name, password, institution, qualification, course});
         if (response.data.alreadyExists) {
           Toast.show({
             type: 'error',
@@ -126,11 +115,11 @@ const Studentsignin = () => {
         backgroundColor: 'white',
         height: '100%',
       }}>
-      <View style={{width: '100%',height:"100%", paddingVertical: 15,paddingHorizontal: 14, display:"flex", flexDirection:"column",gap: 50 }}>
+      <View style={{ width: '100%', height: "100%", paddingVertical: 15, paddingHorizontal: 14, display: "flex", flexDirection: "column", gap: 50 }}>
         <View>
           <Image
-            source={require('../../assets/images/logo.png')}
-            style={{height: 40, width: 80}}
+            source={require('../../../assets/images/logo.png')}
+            style={{ height: 40, width: 80 }}
           />
         </View>
 
@@ -142,55 +131,55 @@ const Studentsignin = () => {
               gap: 6,
               marginBottom: 20,
             }}>
-            <Text style={{fontSize: 24, fontWeight: 800, color: 'black'}}>
+            <Text style={{ fontSize: 24, fontWeight: 800, color: 'black' }}>
               Create an account
             </Text>
-            <Text style={{fontSize: 16, fontWeight: 400, color: 'black'}}>
+            <Text style={{ fontSize: 16, fontWeight: 400, color: 'black' }}>
               Let's get you started
             </Text>
           </View>
           <TextInput
             placeholder="Enter your phone number"
             keyboardType="phone-pad"
-            onChangeText={value => setInputs({...inputs, phone: value})}
+            onChangeText={value => setInputs({ ...inputs, phone: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
           <TextInput
             placeholder="Enter your email Address"
             keyboardType="email-address"
-            onChangeText={value => setInputs({...inputs, email: value})}
+            onChangeText={value => setInputs({ ...inputs, email: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
           <TextInput
             placeholder="Enter your name"
-            onChangeText={value => setInputs({...inputs, name: value})}
+            onChangeText={value => setInputs({ ...inputs, name: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
           <TextInput
             placeholder="Enter your password"
             secureTextEntry
-            onChangeText={value => setInputs({...inputs, password: value})}
+            onChangeText={value => setInputs({ ...inputs, password: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
           <TextInput
             placeholder="Enter your institution name"
-            onChangeText={value => setInputs({...inputs, institution: value})}
+            onChangeText={value => setInputs({ ...inputs, institution: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
           <TextInput
             placeholder="Enter your qualification"
-            onChangeText={value => setInputs({...inputs, qualification: value})}
+            onChangeText={value => setInputs({ ...inputs, qualification: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
           <TextInput
             placeholder="Enter your course"
-            onChangeText={value => setInputs({...inputs, course: value})}
+            onChangeText={value => setInputs({ ...inputs, course: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
@@ -204,11 +193,11 @@ const Studentsignin = () => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-                {btnloading ? (
-                    <ActivityIndicator size="large" color="white" />
-                ):(
-                    <Text style={{color: 'white'}}>Register</Text>
-                )}
+            {btnloading ? (
+              <ActivityIndicator size="large" color="white" />
+            ) : (
+              <Text style={{ color: 'white' }}>Register</Text>
+            )}
           </TouchableOpacity>
 
           <View
@@ -218,9 +207,9 @@ const Studentsignin = () => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-            <Text style={{color: 'gray'}}>Already have an account? </Text>
-            <TouchableOpacity onPress={()=> navigation.navigate("Login")}>
-              <Text style={{color: '#ff723f'}}>Login</Text>
+            <Text style={{ color: 'gray' }}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+              <Text style={{ color: '#ff723f' }}>Login</Text>
             </TouchableOpacity>
           </View>
         </View>

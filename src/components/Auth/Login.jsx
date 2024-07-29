@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,10 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import { useNavigation  } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-import baseUrl from '../../utils/axios';
+import { Login } from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Studentlogin = () => {
@@ -26,14 +26,14 @@ const Studentlogin = () => {
   const [btnloading, setbtnloading] = useState(false)
 
   async function loginStudent() {
-    const {phone, email, name, password, institution, qualification, course} =inputs;
+    const { phone, email, name, password, institution, qualification, course } = inputs;
     setbtnloading(true)
 
     if (
       !email ||
       !password
     ) {
-      Toast.show({type: 'error', text1: 'Fill in all required fields!'});
+      Toast.show({ type: 'error', text1: 'Fill in all required fields!' });
     } else if (email.length > 30 || email.length < 10) {
       Toast.show({
         type: 'error',
@@ -46,14 +46,8 @@ const Studentlogin = () => {
       });
     } else {
       try {
-        const response = await baseUrl.post(
-          '/student/login',
-          {
-            email,
-            password
-          },
-        );
-        if(response) console.warn("Submit")
+        const response = await Login({ email, password });
+        if (response) console.warn("Submit")
         if (response.data.student_token) {
           Toast.show({
             type: 'success',
@@ -67,8 +61,8 @@ const Studentlogin = () => {
             'student_token',
             JSON.stringify(response.data.student_token),
           );
-          navigation.navigate("Home")
-        } 
+          navigation.navigate("HomeScreens")
+        }
         if (!response.data.StudentExists && !response.data.passCheck) {
           Toast.show({
             type: 'error',
@@ -109,15 +103,15 @@ const Studentlogin = () => {
         backgroundColor: 'white',
         height: '100%',
       }}>
-      <View style={{width: '100%',height:"100%", paddingVertical: 15,paddingHorizontal: 14, display:"flex", flexDirection:"column",gap: 50 }}>
+      <View style={{ width: '100%', height: "100%", paddingVertical: 15, paddingHorizontal: 14, display: "flex", flexDirection: "column", gap: 50 }}>
         <View>
           <Image
-            source={require('../../assets/images/logo.png')}
-            style={{height: 40, width: 80}}
+            source={require('../../../assets/images/logo.png')}
+            style={{ height: 40, width: 80 }}
           />
         </View>
 
-        <View style={{display: 'flex', flexDirection: 'column', justifyContent:'center',height: "70%"}}>
+        <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: "70%" }}>
           <View
             style={{
               display: 'flex',
@@ -125,30 +119,30 @@ const Studentlogin = () => {
               gap: 6,
               marginBottom: 30,
             }}>
-            <Text style={{fontSize: 24, fontWeight: 800, color: 'black'}}>
+            <Text style={{ fontSize: 24, fontWeight: 800, color: 'black' }}>
               Welcome back
             </Text>
-            <Text style={{fontSize: 16, fontWeight: 400, color: 'black'}}>
+            <Text style={{ fontSize: 16, fontWeight: 400, color: 'black' }}>
               Please login to your account
             </Text>
           </View>
-         
+
           <TextInput
             placeholder="Enter your email Address"
             keyboardType="email-address"
-            onChangeText={value => setInputs({...inputs, email: value})}
+            onChangeText={value => setInputs({ ...inputs, email: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
-          
+
           <TextInput
             placeholder="Enter your password"
             secureTextEntry
-            onChangeText={value => setInputs({...inputs, password: value})}
+            onChangeText={value => setInputs({ ...inputs, password: value })}
             style={styles.input}
             placeholderTextColor="gray"
           />
-         
+
           <TouchableOpacity
             onPress={loginStudent}
             style={{
@@ -158,11 +152,11 @@ const Studentlogin = () => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-                {btnloading ? (
-                    <ActivityIndicator size="large" color="white" />
-                ):(
-                    <Text style={{color: 'white'}}>Login</Text>
-                )}
+            {btnloading ? (
+              <ActivityIndicator size="large" color="white" />
+            ) : (
+              <Text style={{ color: 'white' }}>Login</Text>
+            )}
           </TouchableOpacity>
 
           <View
@@ -172,9 +166,9 @@ const Studentlogin = () => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-            <Text style={{color: 'gray'}}>Don't have an account? </Text>
-            <TouchableOpacity onPress={()=> navigation.navigate("Signup")}>
-              <Text style={{color: '#ff723f'}}>Signup</Text>
+            <Text style={{ color: 'gray' }}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+              <Text style={{ color: '#ff723f' }}>Signup</Text>
             </TouchableOpacity>
           </View>
         </View>
