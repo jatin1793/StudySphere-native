@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, FlatList } from 'react-native';
 import ScreenHeader from '../ScreenHeader';
 import { useSelector } from 'react-redux';
+import { globalStyles } from '../../utils/GlobalStyles';
 
 const EnrolledCourses = () => {
   const navigation = useNavigation();
@@ -11,21 +12,29 @@ const EnrolledCourses = () => {
   return (
     <View>
       <ScreenHeader title='Enrolled Courses' />
-      <ScrollView style={{height: "90%"}}>
-        {EnrolledCourses?.map((item) => {
-          return (
-            <TouchableOpacity key={item._id} style={{ padding: 10 }} activeOpacity={0.6} onPress={() => navigation.navigate('Course', { courseId: item.courseid })}>
+      <ScrollView style={{ height: "90%" }}>
+        <FlatList
+          data={EnrolledCourses}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <TouchableOpacity key={item._id} style={{ padding: 10 }} activeOpacity={0.6} onPress={() => navigation.navigate('Course', { courseId: item._id })}>
               <View style={styles.card}>
                 <Image source={{ uri: item.coursePoster }} style={styles.image} />
                 <View style={styles.info}>
                   <Text style={styles.courseName}>{item?.courseTitle}</Text>
-                  <Text style={styles.instructor}>{item?.Instructor?.name}</Text>
+                  <Text style={styles.instructor}>{item?.courseDomain}</Text>
                   <Text style={styles.courseLength}>{item?.courseVideos?.length} Lectures </Text>
                 </View>
               </View>
             </TouchableOpacity>
-          )
-        })}
+          )}
+          contentContainerStyle={{ paddingBottom: 10 }}
+          ListEmptyComponent={
+            <View style={[globalStyles.screenHeight, {flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}]}>
+              <Text style={{ fontSize: 16, color: "gray" }}>You are not enrolled in any of the courses</Text>
+            </View>
+          }
+        />
       </ScrollView>
     </View>
   );

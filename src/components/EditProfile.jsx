@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import ScreenHeader from './ScreenHeader'
 import { useDispatch, useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/Entypo'
-import { Colors } from '../theme/Colors'
+import theme from '../theme/Colors'
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { Set_student_profileimg, Update_student_profile } from '../utils/axios'
@@ -16,7 +16,6 @@ const EditProfile = () => {
     const navigation = useNavigation();
     const user = useSelector((state) => state.user.userdata);
     const dispatch = useDispatch();
-    console.log(user?.phone)
 
     const [userdets, setuserdets] = useState({
         name: user?.name,
@@ -49,7 +48,7 @@ const EditProfile = () => {
                     form.append("file", data)
                     Set_student_profileimg({ formData: form })
                         .then((res) => {
-                            console.log("res --> ", res)
+                            // console.log("res --> ", res)
                         })
                         .catch((err) => {
                             console.log("err --> ", err)
@@ -73,7 +72,7 @@ const EditProfile = () => {
         <View>
             <ScreenHeader title="Edit Profile" />
             <View style={{ height: "90%", padding: 10, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <View style={{ marginRight: 10, backgroundColor: 'white', padding: 10, borderRadius: 17, display: 'flex', flexDirection: 'row', gap: 8 }}>
+                <View style={{ marginRight: 10, backgroundColor: 'white', padding: 10, borderRadius: 17, display: 'flex', flexDirection: 'row', gap: 25 }}>
                     <TouchableOpacity onPress={pickDocument}>
                         <Image
                             source={{ uri: user?.profileimg }}
@@ -89,11 +88,11 @@ const EditProfile = () => {
                 </View>
 
                 <View>
-                    <Text style={{ fontSize: 20, color: Colors.ter, fontFamily: 'Poppins-Medium', marginBottom: 10 }}>Profile Info</Text>
+                    <Text style={{ fontSize: 20, color: theme.colors.ter, fontFamily: 'Poppins-Medium', marginBottom: 10 }}>Edit Profile</Text>
 
                     <View style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 15, color: Colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>username</Text>
+                            <Text style={{ fontSize: 15, color: theme.colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>username</Text>
                             <TextInput
                                 defaultValue={user?.name}
                                 keyboardType="text"
@@ -104,8 +103,7 @@ const EditProfile = () => {
                         </View>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 15, color: Colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>phone</Text>
-                            {console.log(user?.phone)}
+                            <Text style={{ fontSize: 15, color: theme.colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>phone</Text>
                             <TextInput
                                 defaultValue={user.phone?.toString()}
                                 keyboardType="phone-pad"
@@ -116,7 +114,7 @@ const EditProfile = () => {
                         </View>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 15, color: Colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>institution</Text>
+                            <Text style={{ fontSize: 15, color: theme.colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>institution</Text>
                             <TextInput
                                 defaultValue={user?.institution}
                                 keyboardType="text"
@@ -127,7 +125,7 @@ const EditProfile = () => {
                         </View>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 15, color: Colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>qualification</Text>
+                            <Text style={{ fontSize: 15, color: theme.colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>qualification</Text>
                             <TextInput
                                 defaultValue={user?.qualification}
                                 keyboardType="text"
@@ -138,7 +136,7 @@ const EditProfile = () => {
                         </View>
 
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 15, color: Colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>course</Text>
+                            <Text style={{ fontSize: 15, color: theme.colors.sec, fontFamily: 'Poppins-Regular', textTransform: 'capitalize' }}>course</Text>
                             <TextInput
                                 defaultValue={user?.course}
                                 keyboardType="text"
@@ -150,7 +148,7 @@ const EditProfile = () => {
                     </View>
                 </View>
 
-                <TouchableOpacity onPress={() => editProfile(userdets)} activeOpacity={0.6} style={{ marginBottom: 25, backgroundColor: Colors.pri, paddingVertical: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 5 }}>
+                <TouchableOpacity onPress={() => editProfile(userdets)} activeOpacity={0.6} style={{ marginBottom: 25, backgroundColor: theme.colors.pri, paddingVertical: 18, alignItems: 'center', justifyContent: 'center', borderRadius: 5 }}>
                     <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 15 }}>Save Changes</Text>
                 </TouchableOpacity>
 

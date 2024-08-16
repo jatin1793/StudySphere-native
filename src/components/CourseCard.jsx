@@ -1,6 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'
+import theme from '../theme/Colors';
 
 const CourseCard = ({ courseposter, coursename, instructor, courselength, courseid }) => {
   const navigation = useNavigation();
@@ -10,11 +12,17 @@ const CourseCard = ({ courseposter, coursename, instructor, courselength, course
 
     <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate('Course', { courseId: courseid })}>
       <View style={styles.card}>
-        <Image source={{ uri: courseposter ? courseposter : null }} style={styles.image} />
+        {
+          courseposter &&
+          <Image source={{ uri: courseposter }} style={styles.image} />
+        }
         <View style={styles.info}>
           <Text style={styles.courseName}>{coursename}</Text>
-          <Text style={styles.instructor}>By {instructor} </Text>
-          <Text style={styles.courseLength}>{courselength} Lectures </Text>
+          <Text style={styles.instructor}>{instructor} </Text>
+          <View style={{display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center'}}>
+            <Icon name='play-circle-sharp' color={theme.colors.pri} size={20} />
+            <Text style={styles.courseLength}>{courselength} lectures </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>

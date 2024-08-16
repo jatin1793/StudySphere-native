@@ -47,7 +47,6 @@ const Studentlogin = () => {
     } else {
       try {
         const response = await Login({ email, password });
-        if (response) console.warn("Submit")
         if (response.data.student_token) {
           Toast.show({
             type: 'success',

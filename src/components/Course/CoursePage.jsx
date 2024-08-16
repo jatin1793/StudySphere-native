@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/FontAwesome6'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScreenHeader from '../ScreenHeader';
 import { Get_student_course } from '../../utils/axios';
 import Toast from 'react-native-toast-message';
 import { TruncatedText } from '../../utils/handleBigPara';
+import theme from '../../theme/Colors';
 
 const styles = StyleSheet.create({
     scrollbox: {
@@ -93,7 +95,11 @@ const CoursePage = () => {
                             <View>
                                 <Text style={styles.courseName}>{course?.courseTitle}</Text>
                                 <View style={{ display: 'flex', flexDirection: 'row', gap: 50, marginTop: 10 }}>
-                                    <Text style={{ fontSize: 15, color: '#666', fontFamily: 'Poppins-Regular' }}>{course?.enrolledStudents?.length} enrolled</Text>
+                                    <Text style={{ fontSize: 15, color: '#666', fontFamily: 'Poppins-Regular' }}>
+                                        <View style={{ marginRight: 10 }}>
+                                            <Icon2 name='user-group' color={theme.colors.ter} size={15} />
+                                        </View> {course?.enrolledStudents?.length} enrolled
+                                    </Text>
                                     <Text style={{ fontSize: 15, color: '#666', fontFamily: 'Poppins-Regular' }}>{course?.courseDomain}</Text>
                                 </View>
                             </View>
@@ -107,24 +113,26 @@ const CoursePage = () => {
                                 <Text style={{ fontSize: 15, color: 'red', fontFamily: 'Poppins-Regular' }}>Image not available</Text>
                             )}
 
-                            <View>
+                            <View style={{ backgroundColor: 'white', padding: 10, borderRadius: 15 }}>
                                 <Text style={{ fontSize: 20, color: 'black', fontFamily: 'Poppins-Medium' }}>Description</Text>
-                                <TruncatedText text={course?.courseDescription} styles={{ fontSize: 15, color: 'black', fontFamily: 'Poppins-Regular' }} />
+                                <TruncatedText text={course?.courseDescription} styles={{ fontSize: 13, color: '#666', fontFamily: 'Poppins-Regular' }} />
                             </View>
 
-                            <View>
+                            <View style={{ backgroundColor: 'white', padding: 10, borderRadius: 15 }}>
                                 <Text style={{ fontSize: 20, color: 'black', fontFamily: 'Poppins-Medium' }}>{course?.courseVideos?.length} Lectures</Text>
                                 <View style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
-                                    {course?.courseVideos?.map((item) => {
-                                        return (
+                                    <FlatList
+                                        data={course?.courseVideos}
+                                        keyExtractor={(item) => item._id}
+                                        renderItem={({ item }) => (
                                             <TouchableOpacity key={item._id} onPress={() => navigation.navigate('Video', { "videoId": item._id })}>
                                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 20 }}>
                                                     <Icon name="play-circle" color="black" size={40} />
                                                     <Text style={{ fontSize: 15, color: 'black', fontFamily: 'Poppins-Regular', width: '80%' }}>{item.videotitle}</Text>
                                                 </View>
                                             </TouchableOpacity>
-                                        )
-                                    })}
+                                        )}
+                                    />
                                 </View>
                             </View>
                         </View>

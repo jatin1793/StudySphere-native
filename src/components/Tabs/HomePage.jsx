@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TextInput, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image, TextInput, ActivityIndicator, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CourseCard from '../CourseCard'
 import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
 import { Get_student_home } from '../../utils/axios';
-import { Colors } from '../../theme/Colors';
+import theme from '../../theme/Colors';
 
 const styles = StyleSheet.create({
   scrollbox: {
@@ -37,14 +37,17 @@ const HomePage = () => {
 
         <View style={{ marginTop: 20, display: 'flex', flexDirection: 'row', paddingRight: 10, justifyContent: "space-between", alignItems: 'center' }}>
           <View style={{ display: 'flex', flexDirection: 'row' }}>
-            <Text style={{ color: Colors.sec, fontSize: 25, fontFamily: "Poppins-Regular" }}>Hello, </Text>
-            <Text style={{ color: Colors.pri, fontSize: 25, fontFamily: "Poppins-Bold" }}>{user?.name.split(' ')[0]}</Text>
+            <Text style={{ color: theme.colors.sec, fontSize: 25, fontFamily: "Poppins-Regular" }}>Hello, </Text>
+            <Text style={{ color: theme.colors.pri, fontSize: 25, fontFamily: "Poppins-Bold" }}>{user?.name.split(' ')[0]}</Text>
           </View>
 
-          <Image
-            source={{ uri: user?.profileimg }}
-            style={{ height: 50, width: 50, borderRadius: 100 }}
-          />
+          {
+            user?.profileimg &&
+            <Image
+              source={{ uri: user?.profileimg }}
+              style={{ height: 50, width: 50, borderRadius: 100 }}
+            />
+          }
         </View>
 
         <View>
@@ -71,72 +74,71 @@ const HomePage = () => {
           </View>
         </View>
 
-        {!allcourses && !allinstructors ? (
-          <View style={{ flex: 1,height:500 ,justifyContent: 'center', alignItems: 'center' }}>
+        {!user && !allcourses && !allinstructors ? (
+          <View style={{ flex: 1, height: 500, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size={50} color="#ff723f" />
           </View>
         ) : (
-          <View style={{display: 'flex', flexDirection: 'column', gap: 20}}>
+          <View style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <View>
-              <Text style={{ color: Colors.pri, fontSize: 24, paddingVertical: 5, fontFamily: "Poppins-Bold" }}>Popular Courses</Text>
-              <ScrollView style={styles.scrollbox} horizontal={true}>
-                {allcourses?.map((item) => {
-                  return (
-                    <CourseCard
-                      courseposter={item.coursePoster}
-                      coursename={item.courseTitle}
-                      instructor={item.Instructor.name}
-                      courselength={item.courseVideos.length}
-                      courseid={item._id}
-                      key={item._id}
-                    />
-                  )
-                })
-                }
-              </ScrollView>
+              <Text style={{ color: theme.colors.pri, fontSize: 24, paddingVertical: 5, fontFamily: "Poppins-Bold" }}>Popular Courses</Text>
+              <FlatList 
+                data={allcourses}
+                keyExtractor={(item) => item._id}
+                horizontal={true}
+                renderItem={({item}) => (
+                  <CourseCard
+                    courseposter={item.coursePoster}
+                    coursename={item.courseTitle}
+                    instructor={item.courseDomain}
+                    courselength={item.courseVideos.length}
+                    courseid={item._id}
+                  />
+                )}
+              />
               <View>
               </View>
             </View>
 
             <View>
-              <Text style={{ color: Colors.pri, fontSize: 24, paddingVertical: 5, fontFamily: "Poppins-Bold" }}>Mentor of the Weeks</Text>
-              <ScrollView style={styles.scrollbox} horizontal={true}>
-                {allinstructors?.map((item) => {
-                  return (
-                    <View key={item._id} style={{ marginRight: 10, backgroundColor: 'white', padding: 10, borderRadius: 17, display: 'flex', flexDirection: 'row', gap: 8 }}>
-                      <Image
-                        source={{ uri: item.profileimg }}
-                        style={{ height: 40, width: 40, borderRadius: 100 }}
-                      />
-                      <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', maxWidth: 180 }}>
-                        <Text style={{ color: 'black', fontSize: 15, fontFamily: "Poppins-Medium" }}>{item.name}</Text>
-                        <Text style={{ color: 'gray', fontSize: 12, fontFamily: "Poppins-Medium" }}>⭐ 4.9 (1,433 Review)</Text>
-                      </View>
+              <Text style={{ color: theme.colors.pri, fontSize: 24, paddingVertical: 5, fontFamily: "Poppins-Bold" }}>Mentor of the Weeks</Text>
+              <FlatList 
+                data={allinstructors}
+                keyExtractor={(item) => item._id}
+                horizontal={true}
+                renderItem={({item}) => (
+                  <View key={item._id} style={{ marginRight: 10, backgroundColor: 'white', padding: 10, borderRadius: 17, display: 'flex', flexDirection: 'row', gap: 8 }}>
+                    <Image
+                      source={{ uri: item.profileimg }}
+                      style={{ height: 40, width: 40, borderRadius: 100 }}
+                    />
+                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', maxWidth: 180 }}>
+                      <Text style={{ color: 'black', fontSize: 15, fontFamily: "Poppins-Medium" }}>{item.name}</Text>
+                      <Text style={{ color: 'gray', fontSize: 12, fontFamily: "Poppins-Medium" }}>⭐ 4.9 (1,433 Review)</Text>
                     </View>
-                  )
-                })}
-              </ScrollView>
+                  </View>
+                )}
+              />
               <View>
               </View>
             </View>
 
             <View>
-              <Text style={{ color: Colors.pri, fontSize: 24, paddingVertical: 5, fontFamily: "Poppins-Bold" }}>My Courses</Text>
-              <ScrollView style={styles.scrollbox} horizontal={true}>
-                {enrolledCourses?.map((item) => {
-                  return (
-                    <CourseCard
-                      courseposter={item.coursePoster}
-                      coursename={item.courseTitle}
-                      instructor={item.Instructor.name}
-                      courselength={item.courseVideos.length}
-                      courseid={item._id}
-                      key={item._id}
-                    />
-                  )
-                })
-                }
-              </ScrollView>
+              <Text style={{ color: theme.colors.pri, fontSize: 24, paddingVertical: 5, fontFamily: "Poppins-Bold" }}>My Courses</Text>
+              <FlatList 
+                data={enrolledCourses}
+                keyExtractor={(item) => item._id}
+                horizontal={true}
+                renderItem={({item}) => (
+                  <CourseCard
+                    courseposter={item.coursePoster}
+                    coursename={item.courseTitle}
+                    instructor={item.courseDomain}
+                    courselength={item.courseVideos.length}
+                    courseid={item._id}
+                  />
+                )}
+              />
               <View>
               </View>
             </View>
